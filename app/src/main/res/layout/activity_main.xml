@@ -8,8 +8,8 @@
     tools:context=".MainActivity"
     android:background="@drawable/background">
 
-    <TextView
-        android:id="@+id/wigdet_report_fire"
+    <Button
+        android:id="@+id/btn_report_fire"
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:text="Report a Fire"
@@ -22,8 +22,8 @@
         android:textSize="18sp"
         android:layout_marginTop="50dp"/>
 
-    <TextView
-        android:id="@+id/wigdet_safety_tips"
+    <Button
+        android:id="@+id/btn_safety_tips"
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:text="Safety Tips"
@@ -35,7 +35,7 @@
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:layout_below="@+id/wigdet_report_fire"
+        android:layout_below="@+id/btn_report_fire"
         android:layout_marginTop="50dp"/>
 
 
