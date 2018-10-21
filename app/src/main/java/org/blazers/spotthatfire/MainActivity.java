@@ -14,6 +14,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnReportFire = findViewById(R.id.btn_report_fire);
+        btnSafetyTips = findViewById(R.id.btn_safety_tips);
+
+
         btnReportFire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
