@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -19,16 +20,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
+import com.squareup.picasso.Picasso;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
 public class ReportFireActivity extends AppCompatActivity {
-
+    FirebaseVisionLabelDetectorOptions options;
 
     //Image and GPS capture code open....................................................................
 
@@ -48,7 +60,7 @@ public class ReportFireActivity extends AppCompatActivity {
 
     String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
 
-    TextView TxtLatlong;
+    TextView TxtLatlong, tvLabels;
 
     GPSTracker gps, gpsFpi;
 
@@ -56,6 +68,7 @@ public class ReportFireActivity extends AppCompatActivity {
     //............submit picture to database.................
     byte[] byteArray;
     String encodedImage;
+    private List<FirebaseVisionLabel> allLabels;
     //............submit picture to database.................
 
 
@@ -66,8 +79,13 @@ public class ReportFireActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_fire);
 
-        TxtLatlong = findViewById(R.id.lat_lon_container);
-        imgPreview = findViewById(R.id.image_video_container);
+        options = new FirebaseVisionLabelDetectorOptions.Builder()
+                .setConfidenceThreshold(0.8f)
+                .build();
+
+        TxtLatlong = (TextView) findViewById(R.id.lat_lon_container);
+        imgPreview = (ImageView) findViewById(R.id.image_video_container);
+        tvLabels = (TextView) findViewById(R.id.tvLabels);
 
         //Image and GPS capture code open....................................................................
         context = getApplicationContext();
@@ -123,6 +141,7 @@ public class ReportFireActivity extends AppCompatActivity {
         // if the result is capturing Image
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                Toast.makeText(context, "Result OK", Toast.LENGTH_SHORT).show();
                 // successfully captured the image
                 // display it in image view
                 previewCapturedImage();
@@ -132,33 +151,35 @@ public class ReportFireActivity extends AppCompatActivity {
                 Bitmap originBitmap = null;
 
 
-                if (originBitmap != null)
-                {
+                if (originBitmap != null) {
+
                     this.imgPreview.setImageBitmap(originBitmap);
+
+                    //picasso
+                    //Picasso.with(MainActivity.this).load(file).fit().centerCrop().into(imageView);
+
+
                     Log.w("Image Setted in", "Done Loading Image");
-                    try
-                    {
+                    try {
                         Bitmap image = ((BitmapDrawable) imgPreview.getDrawable()).getBitmap();
+
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         image.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
                         byteArray = byteArrayOutputStream.toByteArray();
                         encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
                         // Calling the background process so that application wont slow down
                         //UploadImage uploadImage = new UploadImage();
                         //uploadImage.execute("");
                         //End Calling the background process so that application wont slow down
+                    } catch (Exception e) {
+                        Log.w("OOooooooooo", "exception");
                     }
-                    catch (Exception e)
-                    {
-                        Log.w("OOooooooooo","exception");
-                    }
-                    Toast.makeText(ReportFireActivity.this, "Conversion Done",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReportFireActivity.this, "Conversion Done", Toast.LENGTH_SHORT).show();
                 }
                 // End getting the selected image, setting in imageview and converting it to byte and base 64
 
                 //............submit picture to database.................
-
-
 
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -176,9 +197,45 @@ public class ReportFireActivity extends AppCompatActivity {
 
     }
 
+    private void labelImage(Bitmap bitmap) {
+        Toast.makeText(context, "labelling started", Toast.LENGTH_SHORT).show();
+        tvLabels.setText("");
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
+        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
+                .getVisionLabelDetector();
+// Or, to set the minimum confidence required:
+//        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
+//                .getVisionLabelDetector(options);
+        Task<List<FirebaseVisionLabel>> result =
+                detector.detectInImage(image)
+                        .addOnSuccessListener(
+                                new OnSuccessListener<List<FirebaseVisionLabel>>() {
+                                    @Override
+                                    public void onSuccess(List<FirebaseVisionLabel> labels) {
+                                        // Task completed successfully
+                                        // ...
+                                        Toast.makeText(context, "labeled successfully", Toast.LENGTH_SHORT).show();
+                                        allLabels = labels;
+                                        for (FirebaseVisionLabel label : labels) {
+                                            String text = label.getLabel();
+                                            String entityId = label.getEntityId();
+                                            float confidence = label.getConfidence();
 
-
-
+                                            tvLabels.setText(tvLabels.getText().toString() + "\n" + text + " : " + entityId + " : " + confidence);
+                                            Toast.makeText(context, "Labelling successful", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                        Toast.makeText(context, "Lablling failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+    }
 
 
     //Here we store the file url as it will be null after returning from camera app
@@ -272,18 +329,14 @@ public class ReportFireActivity extends AppCompatActivity {
             final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
                     options);
 
+            labelImage(bitmap);
+
             imgPreview.setImageBitmap(bitmap);
 
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
 
 
     //Image and GPS capture code close....................................................................

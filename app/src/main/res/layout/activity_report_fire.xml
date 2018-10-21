@@ -15,12 +15,6 @@
         android:textAlignment="center"
         />
 
-    <TextView
-        android:id="@+id/lat_lon_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image_video_container"/>
-
     <Button
         android:id="@+id/report_fire_button"
         android:layout_width="100dp"
@@ -31,4 +25,21 @@
         android:text="Report Fire"
         android:textColor="#FFFFFF"
         />
+
+    <TextView
+        android:id="@+id/lat_lon_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_fire_button"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/tvLabels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lat_lon_container"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:text="label field"/>
 </RelativeLayout>
