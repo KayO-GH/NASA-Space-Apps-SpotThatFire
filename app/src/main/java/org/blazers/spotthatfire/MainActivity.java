@@ -1,6 +1,6 @@
 package org.blazers.spotthatfire;
 
-import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,15 +14,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnReportFire = findViewById(R.id.btn_report_fire);
-        btnSafetyTips = findViewById(R.id.btn_safety_tips);
-
+        init();
 
         btnReportFire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent reportIntent = new Intent(MainActivity.this,ReportFireActivity.class);
-                MainActivity.this.startActivity(reportIntent);
+                //start camera
+
+
             }
         });
 
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
                 //go to safety tips activity
             }
         });
-
 
     }
 
