@@ -1,6 +1,7 @@
 package org.blazers.spotthatfire;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //start camera
-
+                Intent reportIntent = new Intent(MainActivity.this, ReportFireActivity.class);
+                startActivity(reportIntent);
 
             }
         });
