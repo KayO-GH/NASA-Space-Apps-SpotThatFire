@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Spot That Fire</string>
+
+    <string name="first_tip">If you’re building a home, use fire-resistant building materials. And remember that houses situated fewer than 15 feet apart are at higher risk from wildfires.
+\n\nCover attic, eave and sub-floor vents with noncombustible screening.
+\n\nSeal the open edges of a barrel tile roof with grout to keep embers from blowing in.
+\n\nInstall tempered glass or multi-layered glazed panels in exterior windows, glass doors and skylights.
+\n\nAvoid landscaping with combustible bark and wood-chip mulch.
+\n\nPlant native, fire-resistant vegetation whenever possible.
+\n\nKeep grass cut short and the 30-foot area around your home well watered.
+\n\nRemove all dry grass, brush, trees and dead leaves within at least 100 feet from your home.
+\n\nStore firewood and fuel sources at least 30 feet downhill from any structure. Better yet, store them uphill if possible.</string>
 </resources>
