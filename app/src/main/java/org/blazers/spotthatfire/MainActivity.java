@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //go to safety tips activity
+                Intent tipsIntent = new Intent(MainActivity.this, TipsActivity.class);
+                startActivity(tipsIntent);
             }
         });
 

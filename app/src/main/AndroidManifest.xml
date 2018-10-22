@@ -33,6 +33,7 @@
         </activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".ReportFireActivity"></activity>
+        <activity android:name=".TipsActivity"></activity>
     </application>
 
 </manifest>
