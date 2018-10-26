@@ -15,8 +15,8 @@
 
     <Button
         android:id="@+id/report_fire_button"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#1976D2"
         android:layout_below="@+id/image_video_container"
         android:layout_centerHorizontal="true"
